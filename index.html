@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Лента новостей Гематогенки</title>
+    <title>Новостная лента He Dewlos</title>
     <style>
-        /* Базовые настройки страницы под дизайн сайта */
+        /* Базовые стили под дизайн Гематогенки */
         body {
             margin: 0;
             padding: 0;
-            background-color: #0b0c10; /* Темный фон */
+            background-color: #0b0c10; /* Темный фон оригинального сайта */
             color: #ffffff;
             font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             display: flex;
@@ -18,87 +18,57 @@
             min-height: 100vh;
         }
 
-        /* Контейнер ленты */
         .tg-news-section {
             width: 100%;
             max-width: 600px;
             margin: 40px auto;
             padding: 0 20px;
             box-sizing: border-box;
+            text-align: center;
         }
 
         .tg-news-title {
             font-size: 1.6rem;
             font-weight: 700;
             margin-bottom: 30px;
-            text-align: center;
             letter-spacing: 0.5px;
         }
 
-        .tg-news-container {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        /* Карточка поста */
-        .tg-news-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+        /* Контейнер виджета. Высота 620px идеально вмещает 2 поста */
+        .tg-news-wrapper {
+            position: relative;
+            max-height: 620px; 
+            overflow: hidden;
             border-radius: 16px;
-            padding: 24px;
-            box-sizing: border-box;
-            transition: transform 0.2s ease, border-color 0.2s ease, opacity 0.3s ease;
+            transition: max-height 0.4s ease-in-out;
         }
 
-        /* Класс скрытия постов (анимация через JS) */
-        .tg-news-card.tg-hidden {
-            display: none;
-            opacity: 0;
+        /* Состояние развернутой ленты */
+        .tg-news-wrapper.expanded {
+            max-height: 4000px; 
         }
 
-        .tg-news-card:hover {
-            transform: translateY(-2px);
-            border-color: rgba(142, 108, 241, 0.4); /* Фиолетовое свечение границ */
+        /* Градиентное затемнение внизу (эффект скрытых постов) */
+        .tg-news-wrapper::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 120px;
+            background: linear-gradient(transparent, #0b0c10); 
+            pointer-events: none;
+            transition: opacity 0.3s ease;
         }
 
-        .tg-news-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 14px;
-            font-size: 0.85rem;
+        .tg-news-wrapper.expanded::after {
+            opacity: 0; /* Убираем затемнение, когда лента открыта */
         }
 
-        .tg-news-date {
-            color: rgba(255, 255, 255, 0.5);
-        }
-
-        .tg-news-link {
-            color: #8e6cf1; /* Основной фиолетовый акцент */
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.2s ease;
-        }
-
-        .tg-news-link:hover {
-            color: #a388f5;
-            text-decoration: underline;
-        }
-
-        .tg-news-text {
-            line-height: 1.6;
-            color: rgba(255, 255, 255, 0.9);
-            margin: 0;
-            white-space: pre-line; /* Сохраняет абзацы текста */
-            font-size: 0.95rem;
-        }
-
-        /* Кнопка "Смотреть далее" */
+        /* Кнопка "Смотреть далее" в стиле вашего сайта */
         .tg-more-btn {
-            display: block;
-            width: fit-content;
-            margin: 30px auto 0 auto;
+            display: inline-block;
+            margin-top: 30px;
             padding: 12px 38px;
             background: #ffffff;
             color: #000000;
@@ -125,86 +95,34 @@
 <section class="tg-news-section">
     <h1 class="tg-news-title">🌙 Свежие новости из Telegram</h1>
     
-    <div class="tg-news-container" id="tgNewsContainer">
-        
-        <!-- ПОСТ 1 (Будет виден сразу) -->
-        <article class="tg-news-card">
-            <div class="tg-news-meta">
-                <span class="tg-news-date">Сегодня, 18:40</span>
-                <a href="https://t.me" target="_blank" class="tg-news-link">Открыть в ТГ</a>
-            </div>
-            <p class="tg-news-text">Обновление сервера успешно завершено! 🚀 Мы исправили баги с приватами, оптимизировали работу модов и добавили новые стартовые наборы. Ждем всех на сервере!</p>
-        </article>
-
-        <!-- ПОСТ 2 (Будет виден сразу) -->
-        <article class="tg-news-card">
-            <div class="tg-news-meta">
-                <span class="tg-news-date">Вчера, 12:15</span>
-                <a href="https://t.me" target="_blank" class="tg-news-link">Открыть в ТГ</a>
-            </div>
-            <p class="tg-news-text">Проводятся краткосрочные технические работы на хостинге. Возможны потери соединения в течение 15 минут. Приносим извинения за неудобства.</p>
-        </article>
-
-        <!-- ПОСТ 3 (Автоматически спрячется под кнопку) -->
-        <article class="tg-news-card">
-            <div class="tg-news-meta">
-                <span class="tg-news-date">22 мая 2026</span>
-                <a href="https://t.me" target="_blank" class="tg-news-link">Открыть в ТГ</a>
-            </div>
-            <p class="tg-news-text">Запускаем творческий конкурс на лучший спавн! Награда победителям — уникальные привилегии и внутриигровая валюта. Подробности в закрепленном сообщении.</p>
-        </article>
-
-        <!-- ПОСТ 4 (Автоматически спрячется под кнопку) -->
-        <article class="tg-news-card">
-            <div class="tg-news-meta">
-                <span class="tg-news-date">18 мая 2026</span>
-                <a href="https://t.me" target="_blank" class="tg-news-link">Открыть в ТГ</a>
-            </div>
-            <p class="tg-news-text">Абсолютно новый пак кастомных предметов уже на сервере! Проверить новинки можно у торговцев на спавне.</p>
-        </article>
-
+    <div class="tg-news-wrapper" id="tgWrapper">
+        <!-- Официальный виджет Telegram для канала nedewlos -->
+        <script async src="https://telegram.org" 
+                data-telegram-channel="nedewlos" 
+                data-dark="1" 
+                data-width="100%" 
+                data-userpic="false" 
+                data-limit="10">
+        </script>
     </div>
 
-    <!-- Кнопка переключения состояния -->
-    <button class="tg-more-btn" id="tgLoadMoreBtn">Смотреть далее</button>
+    <button class="tg-more-btn" id="tgMoreBtn">Смотреть далее</button>
 </section>
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        const container = document.getElementById("tgNewsContainer");
-        const cards = container.querySelectorAll(".tg-news-card");
-        const btn = document.getElementById("tgLoadMoreBtn");
-        const visibleCount = 2; // Базовое число постов на экране
-
-        // Скрываем все публикации после второй
-        cards.forEach((card, index) => {
-            if (index >= visibleCount) card.classList.add("tg-hidden");
-        });
-
-        // Прячем кнопку управления, если постов в списке мало
-        if (cards.length <= visibleCount) btn.style.display = "none";
+        const wrapper = document.getElementById("tgWrapper");
+        const btn = document.getElementById("tgMoreBtn");
 
         btn.addEventListener("click", function() {
-            const hiddenCards = container.querySelectorAll(".tg-news-card.tg-hidden");
-            
-            if (hiddenCards.length > 0) {
-                // Плавное открытие скрытых блоков
-                hiddenCards.forEach(card => {
-                    card.classList.remove("tg-hidden");
-                    setTimeout(() => card.style.opacity = "1", 10);
-                });
+            if (!wrapper.classList.contains("expanded")) {
+                wrapper.classList.add("expanded");
                 btn.textContent = "Свернуть обратно";
             } else {
-                // Плавное скрытие до исходных двух постов
-                cards.forEach((card, index) => {
-                    if (index >= visibleCount) {
-                        card.classList.add("tg-hidden");
-                        card.style.opacity = "0";
-                    }
-                });
+                wrapper.classList.remove("expanded");
                 btn.textContent = "Смотреть далее";
-                // Скролл к верху блока новостей
-                container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                // Плавная прокрутка обратно к началу новостей
+                wrapper.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         });
     });
